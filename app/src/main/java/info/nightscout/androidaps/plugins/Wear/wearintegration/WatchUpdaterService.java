@@ -37,7 +37,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -666,12 +666,12 @@ public class WatchUpdaterService extends WearableListenerService implements
             return status;
         }
 
-        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        LoopPlugin activeloop = LoopPlugin.getPlugin();
 
-        if (activeloop != null && !activeloop.isEnabled(PluginType.LOOP)) {
+        if (!activeloop.isEnabled(PluginType.LOOP)) {
             status += getString(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
-        } else if (activeloop != null && activeloop.isEnabled(PluginType.LOOP)) {
+        } else {
             lastLoopStatus = true;
         }
 
