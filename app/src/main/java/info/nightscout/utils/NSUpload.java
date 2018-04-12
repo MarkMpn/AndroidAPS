@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
@@ -275,6 +277,9 @@ public class NSUpload {
                 data.put("boluscalc", detailedBolusInfo.boluscalc);
             if (detailedBolusInfo.carbTime != 0)
                 data.put("preBolus", detailedBolusInfo.carbTime);
+            if (!StringUtils.isEmpty(detailedBolusInfo.notes)) {
+                data.put("notes", detailedBolusInfo.notes);
+            }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -295,6 +300,22 @@ public class NSUpload {
                 data.put("percentage", profileSwitch.percentage);
             }
             data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            uploadCareportalEntryToNS(data);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+    }
+
+    public static void uploadTempTarget(TempTarget tempTarget) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.TEMPORARYTARGET);
+            data.put("duration", tempTarget.durationInMinutes);
+            data.put("reason", tempTarget.reason);
+            data.put("targetBottom", tempTarget.low);
+            data.put("targetTop", tempTarget.high);
+            data.put("created_at", DateUtil.toISOString(tempTarget.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
@@ -466,7 +487,7 @@ public class NSUpload {
             try {
                 data.put("eventType", "Note");
                 data.put("created_at", DateUtil.toISOString(new Date()));
-                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start)+" - "+ Build.MANUFACTURER + " "+ Build.MODEL);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
@@ -476,7 +497,7 @@ public class NSUpload {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
-        }
+            }
     }
 
     public static void uploadEvent(String careportalEvent, long time) {
