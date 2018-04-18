@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -50,6 +51,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -480,6 +482,17 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
             if(autosensData != null) {
                 c_cob = autosensData.cob;
+
+                // If we've got a recent BG, check for any more recent carbs
+                BgReading lastBG = DatabaseHelper.actualBg();
+                if (lastBG.date >= System.currentTimeMillis() - 10 * 60 * 1000) {
+                    // Add on any carbs input since the last BG reading
+                    for (Treatment t : MainApp.getConfigBuilder().getTreatmentsFromHistory()) {
+                        if (t.isValid && t.date > lastBG.date && t.date < System.currentTimeMillis()) {
+                            c_cob += t.carbs;
+                        }
+                    }
+                }
             }
         }
 
