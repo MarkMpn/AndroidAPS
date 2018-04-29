@@ -484,11 +484,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 c_cob = autosensData.cob;
 
                 // If we've got a recent BG, check for any more recent carbs
-                BgReading lastBG = DatabaseHelper.actualBg();
-                if (lastBG.date >= System.currentTimeMillis() - 10 * 60 * 1000) {
+                if (autosensData.time >= System.currentTimeMillis() - 10 * 60 * 1000) {
                     // Add on any carbs input since the last BG reading
                     for (Treatment t : MainApp.getConfigBuilder().getTreatmentsFromHistory()) {
-                        if (t.isValid && t.date > lastBG.date && t.date < System.currentTimeMillis()) {
+                        if (t.isValid && t.date > autosensData.time && t.date < System.currentTimeMillis()) {
                             c_cob += t.carbs;
                         }
                     }
