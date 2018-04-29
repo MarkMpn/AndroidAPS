@@ -592,7 +592,7 @@
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Last connection</string>
-    <string name="danar_bluetooth_status">Bluetooh status</string>
+    <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="dev">DEV</string>
