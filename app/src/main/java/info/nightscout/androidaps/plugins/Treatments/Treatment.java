@@ -133,6 +133,24 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+
+    /*
+     * mealBolus, _id and isSMB cannot be known coming from pump. Only compare rest
+     * TODO: remove debug toasts
+     */
+    public boolean equalsRePumpHistory(Treatment other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (insulin != other.insulin) {
+            return false;
+        }
+        if (carbs != other.carbs) {
+            return false;
+        }
+        return true;
+    }
+
     public void copyFrom(Treatment t) {
         date = t.date;
         _id = t._id;
@@ -141,6 +159,14 @@ public class Treatment implements DataPointWithLabelInterface {
         mealBolus = t.mealBolus;
         pumpId = t.pumpId;
         isSMB = t.isSMB;
+    }
+
+    public void copyBasics(Treatment t) {
+        date = t.date;
+        insulin = t.insulin;
+        carbs = t.carbs;
+        pumpId = t.pumpId;
+        source = t.source;
     }
 
     //  ----------------- DataPointInterface --------------------
