@@ -21,6 +21,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -30,8 +31,6 @@ import info.nightscout.utils.JsonHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(Treatment.class);
-
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
@@ -225,7 +224,7 @@ public class Treatment implements DataPointWithLabelInterface {
         if (carbs == 0)
             return 0;
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         float carbSize = (float) (carbs * 5 / profile.getIc(date) / profile.baseBasalSum());
         return Math.max(0.5f, carbSize);
     }
@@ -238,7 +237,7 @@ public class Treatment implements DataPointWithLabelInterface {
         if (insulin == 0)
             return 0;
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         float insulinSize = (float) (insulin * 5 / profile.baseBasalSum());
         return Math.max(0.5f, insulinSize);
     }
