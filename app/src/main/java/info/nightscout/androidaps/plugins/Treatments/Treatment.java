@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -60,6 +62,8 @@ public class Treatment implements DataPointWithLabelInterface {
     public int insulinInterfaceID = InsulinInterface.OREF_RAPID_ACTING; // currently unused, will be used in the future
     @DatabaseField
     public double dia = Constants.defaultDIA; // currently unused, will be used in the future
+    @DatabaseField
+    public String boluscalc;
 
     public Treatment() {
     }
@@ -80,6 +84,7 @@ public class Treatment implements DataPointWithLabelInterface {
             double carbs = treatment.carbs;
             if (json.has("boluscalc")) {
                 JSONObject boluscalc = json.getJSONObject("boluscalc");
+                treatment.boluscalc = boluscalc.toString();
                 if (boluscalc.has("carbs")) {
                     carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
                 }
@@ -93,7 +98,7 @@ public class Treatment implements DataPointWithLabelInterface {
     public String toString() {
         return "Treatment{" +
                 "date= " + date +
-                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + new Date(date).toLocaleString() +
                 ", isValid= " + isValid +
                 ", isSMB= " + isSMB +
                 ", _id= " + _id +
@@ -132,6 +137,15 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+    @Nullable
+    public JSONObject getBoluscalc() {
+        try {
+            if (boluscalc != null)
+            return new JSONObject(boluscalc);
+        } catch (JSONException ignored) {
+        }
+        return null;
+    }
 
     /*
      * mealBolus, _id and isSMB cannot be known coming from pump. Only compare rest
