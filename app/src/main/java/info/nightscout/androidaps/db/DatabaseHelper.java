@@ -200,7 +200,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.setFakingStatus(true);
+        VirtualPumpPlugin.getPlugin().setFakingStatus(true);
         scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleExtendedBolusChange();
@@ -236,7 +236,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.setFakingStatus(false);
+        VirtualPumpPlugin.getPlugin().setFakingStatus(false);
         scheduleTemporaryBasalChange();
     }
 
@@ -967,8 +967,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = trJson.getInt("duration");
                 extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
                 extendedBolus._id = trJson.getString("_id");
-                if (!VirtualPumpPlugin.getFakingStatus()) {
-                    VirtualPumpPlugin.setFakingStatus(true);
+                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
@@ -981,8 +981,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = 0;
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
-                if (!VirtualPumpPlugin.getFakingStatus()) {
-                    VirtualPumpPlugin.setFakingStatus(true);
+                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
@@ -1425,6 +1425,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             queryBuilder.limit(100L);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            profileSwitches = daoProfileSwitch.query(preparedQuery);
+            return profileSwitches;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
+
+    public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {
+        try {
+            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
+            List<ProfileSwitch> profileSwitches;
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            queryBuilder.limit(100L);
+            Where where = queryBuilder.where();
+            where.ge("date", mills);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;
