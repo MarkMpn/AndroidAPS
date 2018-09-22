@@ -365,7 +365,7 @@
   <string name="primefill">Prime/Fyll</string>
   <string name="fillwarning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
   <string name="othersettings_title">Övrigt</string>
-  <string name="fillbolus_title">Standardvärden för prime/fyll.</string>
+  <string name="fillbolus_title">Standardvärden för prime/fyll</string>
   <string name="button1">Knapp 1</string>
   <string name="button2">Knapp 2</string>
   <string name="button3">Knapp 3</string>
@@ -538,7 +538,7 @@
   <string name="treatments_wizard_bgtrend_label">15 min trend</string>
   <string name="treatments_wizard_cob_label">COB</string>
   <string name="superbolus">Superbolus</string>
-  <string name="ns_logappstartedevent">Markera appstart till Nightscout</string>
+  <string name="ns_logappstartedevent">Rapportera appstart till Nightscout</string>
   <string name="restartingapp">Avslutar appen för att inställningarna ska läsas in.</string>
   <string name="danarv2pump">Dana R v2</string>
   <string name="configbuilder_insulin">Insulin</string>
@@ -691,7 +691,7 @@
   <string name="pumpdrivercorrected">Pumpdrivrutin justerad</string>
   <string name="pump_unreachable">Pumpen kan inte nås</string>
   <string name="missed_bg_readings">BG-värden saknas</string>
-  <string name="raise_notifications_as_android_notifications">Använd systemaviseringar för larm och information</string>
+  <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
   <string name="localalertsettings_title">Lokala larm</string>
   <string name="enable_missed_bg_readings_alert">Varna om BG-data saknas</string>
   <string name="enable_pump_unreachable_alert">Varna om pumpen inte går att nå</string>
@@ -875,7 +875,7 @@
   <string name="combo_error_failure_reading_changed_basal_rate">Basalen ändrad i pumpen, men det gick inte att läsa till vad</string>
   <string name="combo_activity_checking_for_history_changes">Letar efter förändringar i historiken</string>
   <string name="combo_error_multiple_boluses_with_identical_timestamp">Flera bolusar med samma mängd insulin importerades just. Endast en kan läggas till i Careportal. Vänligen kontrollera pumpen och gör ändringar i Careportal manuellt vid behov. Observera att man bara kan ha en bolus per klockslag.</string>
-  <string name="about_link_urls">http://www.androidaps.org\nfacebook: http://facebook.androidaps.org</string>
+  <string name="about_link_urls">\n\nWeb: http://www.androidaps.org\n\nDocs: http://wiki.androidaps.org\n\nFB: http://facebook.androidaps.org</string>
   <string name="combo_check_date">Den senaste bolusen är äldre än 24 timmar eller i framtiden. Vänligen kontrollera tid och datum i pumpen.</string>
   <string name="combo_suspious_bolus_time">Tid/datum för bolusen verkar fel. IOB är troligen missvisande. Vänligen kontrollera tid och datum i pumpen.</string>
   <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
@@ -942,7 +942,7 @@
   <string name="ns_chargingonly">Endast vid laddning</string>
   <string name="connectionsettings_title">Anslutningsinställningar</string>
   <string name="ns_wifi_allowedssids">Tillåtna nätverksnamn (separerade med semikolon)</string>
-  <string name="ns_allowroaming">Tillåt anslutning vid roaming</string>
+  <string name="ns_allowroaming">Tillåt NS-data vid roaming</string>
   <string name="openapsama_autosens_max">Max autosens ratio</string>
   <string name="openapsama_autosens_min">Min autosens ratio</string>
   <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA divisor</string>
@@ -952,7 +952,7 @@
   <string name="virtualpump_type">Typ av virtuell pump</string>
   <string name="virtualpump_definition">Pumpdefinition</string>
   <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Den virtuella pumpen kräver fasta värden för basal/bolus.</string>
+  <string name="virtualpump_pump_def_extended_note">* Inga spann stöds som granularitet för basal/bolus i den virtuella pumpen. Endast enkla värden.</string>
   <string name="ns_autobackfill_title">Auto Backfill BG</string>
   <string name="wear_wizard_settings">Kalkylatorinställningar</string>
   <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
@@ -1042,12 +1042,14 @@
   <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
   <string name="treatments_wizard_total_label">Total</string>
   <string name="calculation_short">Kalkyl</string>
-  <string name="handshaking">Handskakning</string>
+  <string name="handshaking">Anslutningen verifieras</string>
   <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
   <string name="maxbolusviolation">Max bolus nådd</string>
   <string name="commanderror">Kommandofel</string>
   <string name="speederror">Felaktig hastighet</string>
   <string name="insulinlimitviolation">Insulingräns nådd</string>
+  <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
+  <string name="loop_openmode_min_change_summary">Loopen kommer att be om justering endast om ändringen är större än detta värde. Standardvärde är 20%</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dag</item>
     <item quantity="other">%1$d dagar</item>

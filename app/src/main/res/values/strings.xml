@@ -241,6 +241,7 @@
     <string name="el_lang" translatable="false">Greek</string>
     <string name="it_lang" translatable="false">Italian</string>
     <string name="ro_lang" translatable="false">Romanian</string>
+    <string name="pt_lang" translatable="false">Portuguese</string>
     <string name="ru_lang" translatable="false">Russian</string>
     <string name="sk_lang" translatable="false">Slovak</string>
     <string name="sv_lang" translatable="false">Swedish</string>
@@ -720,10 +721,10 @@
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
     <string name="waitingforpairing">Waiting for pairing on pump</string>
-    <string name="pairingok">Paring OK</string>
-    <string name="pairingtimedout">Paring timed out</string>
+    <string name="pairingok">Pairing OK</string>
+    <string name="pairingtimedout">Pairing timed out</string>
     <string name="pairing">PAIRING</string>
-    <string name="key_danars_pairingkey" translatable="false">danars_paring_key_</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
     <string name="danars_nodeviceavailable">No device found so far</string>
@@ -1094,7 +1095,7 @@
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtualpump_pump_def_extended_note">* Ranged basal/bolus values are not supported by Virtual Pump.</string>
+    <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
     <string name="ga_lang" translatable="false">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
@@ -1208,7 +1209,7 @@
     <string name="insulinlimitviolation">Insulin limit violation</string>
     <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
-    <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 30%</string>
+    <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
 
     <plurals name="objective_days">

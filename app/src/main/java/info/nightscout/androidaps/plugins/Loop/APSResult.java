@@ -69,24 +69,24 @@ public class APSResult {
         return this;
     }
 
-   public APSResult tempBasalRequested(boolean tempBasalRequested) {
+    public APSResult tempBasalRequested(boolean tempBasalRequested) {
         this.tempBasalRequested = tempBasalRequested;
         return this;
     }
 
-   public APSResult usePercent(boolean usePercent) {
+    public APSResult usePercent(boolean usePercent) {
         this.usePercent = usePercent;
         return this;
     }
 
-   public APSResult json(JSONObject json) {
+    public APSResult json(JSONObject json) {
         this.json = json;
         return this;
     }
 
     @Override
     public String toString() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -115,7 +115,7 @@ public class APSResult {
     }
 
     public Spanned toSpanned() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -129,7 +129,7 @@ public class APSResult {
                         "<b>" + MainApp.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
             else
                 ret = "<b>" + MainApp.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100d) + "%) <br>" +
                         "<b>" + MainApp.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
 
             // smb
@@ -304,7 +304,7 @@ public class APSResult {
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (usePercent) {
@@ -334,22 +334,23 @@ public class APSResult {
                 }
             }
             // report change bigger than 30%
-            if (activeTemp != null) {
-                double percentToBeSmallChange = 30;
-                percentToBeSmallChange /= 100;
-                double change = percent / (double) activeTemp.tempBasalConvertedToPercent(now, profile);
-                double lowThreshold = 1 - percentToBeSmallChange;
-                double highThreshold = 1 + percentToBeSmallChange;
+            double percentMinChangeChange = SP.getDouble(R.string.key_loop_openmode_min_change, 30d);
+            percentMinChangeChange /= 100d;
+            double lowThreshold = 1 - percentMinChangeChange;
+            double highThreshold = 1 + percentMinChangeChange;
+            double change = percent / 100d;
+            if (activeTemp != null)
+                change = percent / (double) activeTemp.tempBasalConvertedToPercent(now, profile);
 
-                if (change < lowThreshold || change > highThreshold) {
-                    if (L.isEnabled(L.APS))
-                        log.debug("TRUE: Outside allowed range " + (change * 100) + "%");
-                    return true;
-                }
+            if (change < lowThreshold || change > highThreshold) {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Outside allowed range " + (change * 100d) + "%");
+                return true;
+            } else {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Inside allowed range " + (change * 100d) + "%");
+                return false;
             }
-            if (L.isEnabled(L.APS))
-                log.debug("FALSE");
-            return false;
         } else {
             if (activeTemp == null && rate == pump.getBaseBasalRate()) {
                 if (L.isEnabled(L.APS))
@@ -377,22 +378,23 @@ public class APSResult {
                 }
             }
             // report change bigger than 30%
-            if (activeTemp != null) {
-                double percentMinChangeChange = SP.getDouble(R.string.key_loop_openmode_min_change, 30d);
-                percentMinChangeChange /= 100;
-                double change = rate / activeTemp.tempBasalConvertedToAbsolute(now, profile);
-                double lowThreshold = 1 - percentMinChangeChange;
-                double highThreshold = 1 + percentMinChangeChange;
+            double percentMinChangeChange = SP.getDouble(R.string.key_loop_openmode_min_change, 30d);
+            percentMinChangeChange /= 100d;
+            double lowThreshold = 1 - percentMinChangeChange;
+            double highThreshold = 1 + percentMinChangeChange;
+            double change = rate / profile.getBasal();
+            if (activeTemp != null)
+                change = rate / activeTemp.tempBasalConvertedToAbsolute(now, profile);
 
-                if (change < lowThreshold || change > highThreshold) {
-                    if (L.isEnabled(L.APS))
-                        log.debug("TRUE: Outside allowed range " + (change * 100) + "%");
-                    return true;
-                }
+            if (change < lowThreshold || change > highThreshold) {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Outside allowed range " + (change * 100d) + "%");
+                return true;
+            } else {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Inside allowed range " + (change * 100d) + "%");
+                return false;
             }
-            if (L.isEnabled(L.APS))
-                log.debug("FALSE");
-            return false;
         }
     }
 }

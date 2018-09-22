@@ -105,6 +105,7 @@ public class TemporaryBasal implements Interval {
         this.isFakeExtended = true;
         this.netExtendedRate = extendedBolus.absoluteRate();
         this.absoluteRate = basal + extendedBolus.absoluteRate();
+        this.pumpId = extendedBolus.pumpId;
     }
 
     public TemporaryBasal clone() {
@@ -227,7 +228,7 @@ public class TemporaryBasal implements Interval {
         }
 
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
         int realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;

@@ -31,12 +31,12 @@
   <string name="description_profile_local">인터넷 연결없이 사용가능한 프로파일</string>
   <string name="description_profile_nightscout">Nightscout에서 정의한 프로필을 사용합니다.</string>
   <string name="description_profile_simple">하나의 시간대만 설정 가능한 단순 프로파일</string>
-  <string name="description_pump_combo">Accu-Chek Combo 펌프와 연동, ruffy 설치 필요</string>
+  <string name="description_pump_combo">아큐-첵 Combo 펌프와 연동, ruffy 설치 필요</string>
   <string name="description_pump_dana_r">다나R 펌프와 연동(다나 RN)</string>
   <string name="description_pump_dana_r_korean">내수용 다나R 펌프와 연동(다나 R)</string>
   <string name="description_pump_dana_r_v2">업그레이드 펌웨어가 설치된 다나R 펌프와 연동</string>
   <string name="description_pump_dana_rs">다나RS 펌프와 연동</string>
-  <string name="description_pump_insight">Accu-Chek Insight 펌프와 연동, SightRemote 설치 필요</string>
+  <string name="description_pump_insight">아큐-첵 Insight 펌프와 연동, SightRemote 설치 필요</string>
   <string name="description_pump_mdi">다회요법으로 관리하는 사용자를 위한 설정</string>
   <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
   <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
@@ -952,7 +952,7 @@
   <string name="virtualpump_type">가성펌프 종류</string>
   <string name="virtualpump_definition">펌프 정의</string>
   <string name="virtualpump_pump_def">Bolus: 스텝=%1$s\n확장Bolus: [Step=%2$s, 기간=%3$s분-%4$s시]\nBasal: 스텝=%5$s\n임시Basal: %6$s (by %7$s), 기간=%8$s분-%9$s시\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* 가상펌프에서 다른 범위의 Basal/Bolus가 지원되지 않습니다.</string>
+  <string name="virtualpump_pump_def_extended_note">* 가상 펌프에서는 Basal/Bolus에 대해 범위로 지정이 될 수 없고, 이산값(discrete values)만 지원 됩니다.</string>
   <string name="ns_autobackfill_title">혈당 자동채움</string>
   <string name="wear_wizard_settings">마법사 설정</string>
   <string name="wear_wizard_settings_summary">마법사 결과에 사용 된 계산:</string>
@@ -1049,7 +1049,7 @@
   <string name="speederror">속도 오류</string>
   <string name="insulinlimitviolation">인슐린 제한 위반</string>
   <string name="loop_openmode_min_change">최소 요청 변화 [%]</string>
-  <string name="loop_openmode_min_change_summary">이 값보다 변화가 클때만 Loop가 새 변화 요청창을 띄울것 입니다. 기본 값은 30%입니다.</string>
+  <string name="loop_openmode_min_change_summary">이 값보다 변화가 클때만 Loop가 새 변화 요청창을 띄울것 입니다. 기본 값은 20%입니다.</string>
   <plurals name="objective_days">
     <item quantity="other">%1$d 일</item>
   </plurals>

@@ -145,7 +145,7 @@ public class BolusWizard {
             calculatedTotalInsulin = 0d;
         }
 
-        double bolusStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
+        double bolusStep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep);
 
         log.debug(log());
@@ -166,7 +166,7 @@ public class BolusWizard {
         sb.append("IncludeBasalIOB=").append(includeBasalIOB).append("; ");
         sb.append("Superbolus=").append(superBolus).append("; ");
         sb.append("Trend=").append(trend).append("; ");
-        sb.append("Profile=").append(specificProfile != null ? specificProfile.getData().toString() : "null").append("; ");
+        sb.append("Profile=").append(specificProfile != null && specificProfile.getData() != null ? specificProfile.getData().toString() : "null").append("; ");
         sb.append("\n");
 
         sb.append("targetBGLow=").append(targetBGLow).append("; ");
