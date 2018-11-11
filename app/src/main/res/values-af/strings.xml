@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
   <string name="autosensdisabledinpreferences">Autosens gedeaktiveer in voorkeure</string>
   <string name="smbdisabledinpreferences">SMB gedeaktiveer in voorkeure</string>
+  <string name="uamdisabledinpreferences">UAM in voorkeure gedeaktiveer</string>
+  <string name="uamdisabledoref1notselected">UAM versper omdat dit staatmaak op Oref1 sensitiwiteit plugin</string>
   <string name="limitingbasalratio">Max basale koers beperk tot %1$.2f U/h as gevolg van %2$s</string>
   <string name="pumplimit">pomp limiet</string>
   <string name="itmustbepositivevalue">dit moet \'n positiewe waarde wees</string>
@@ -1050,6 +1052,7 @@
   <string name="insulinlimitviolation">Insulien limiet skending</string>
   <string name="loop_openmode_min_change">Minimale versoek verandering [%]</string>
   <string name="loop_openmode_min_change_summary">Lus sal opspring en nuwe verandering versoek slegs as verandering is groter as hierdie waarde. Verstek waarde is 20%</string>
+  <string name="pairfirst">Verbind asseblief jou pomp met jou selfoon!</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dae</item>
     <item quantity="other">%1$d dae</item>

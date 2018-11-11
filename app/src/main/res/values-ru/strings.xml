@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
   <string name="autosensdisabledinpreferences">Автоматический подбор чувствительности Autosens отключен в настройках</string>
   <string name="smbdisabledinpreferences">Супер микро болюс SMB отключен в настройках</string>
+  <string name="uamdisabledinpreferences">Незапланированный прием пищи UAM отключен в настройках</string>
+  <string name="uamdisabledoref1notselected">Незапланированный прием пищи UAM отключен, поскольку он основывается на плагине чувствительности из Oref1</string>
   <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
   <string name="pumplimit">лимит помпы</string>
   <string name="itmustbepositivevalue">величина должна быть положительной</string>
@@ -1052,4 +1054,5 @@ Context | Edit Context</string>
   <string name="insulinlimitviolation">Нарушение ограничения инсулина</string>
   <string name="loop_openmode_min_change">Минимальный запрос на изменения [%]</string>
   <string name="loop_openmode_min_change_summary">Алгоритм Ипж выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение. Значение по умолчанию — 20%</string>
+  <string name="pairfirst">Выполните сопряжение помпы с телефоном!</string>
 </resources>
