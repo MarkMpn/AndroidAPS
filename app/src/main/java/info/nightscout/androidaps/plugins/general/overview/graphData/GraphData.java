@@ -8,7 +8,9 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 
 import org.slf4j.Logger;
@@ -27,6 +29,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -46,6 +49,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeA
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * Created by mike on 18.10.2017.
@@ -110,7 +114,37 @@ public class GraphData {
         // set manual y bounds to have nice steps
         graph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
 
-        addSeries(new PointsWithLabelGraphSeries<>(bg));
+        PointsWithLabelGraphSeries series = new PointsWithLabelGraphSeries<>(bg);
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                BgReading bg = (BgReading)dataPoint;
+
+                String label = null;
+                ProfileInterface profile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+
+                if (bg.isaCOBPrediction) {
+                    label = "ACOB Pred: " + bg.valueToUnitsToString(profile.getUnits());
+                }
+                else if (bg.isCOBPrediction) {
+                    label = "COB Pred: " + bg.valueToUnitsToString(profile.getUnits());
+                }
+                else if (bg.isIOBPrediction) {
+                    label = "IOB Pred: " + bg.valueToUnitsToString(profile.getUnits());
+                }
+                else if (bg.isUAMPrediction) {
+                    label = "UAM Pred: " + bg.valueToUnitsToString(profile.getUnits());
+                }
+                else if (bg.isZTPrediction) {
+                    label = "ZT Pred: " + bg.valueToUnitsToString(profile.getUnits());
+                }
+
+                if (label != null) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), label);
+                }
+            }
+        });
+        addSeries(series);
     }
 
     public void addInRangeArea(long fromTime, long toTime, double lowLine, double highLine) {
@@ -290,7 +324,6 @@ public class GraphData {
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
             if (t.getX() < fromTime || t.getX() > endTime) continue;
-            if (t.isSMB && !t.isValid) continue;
             t.setY(getNearestBg((long) t.getX()));
             filteredTreatments.add(t);
         }
@@ -329,7 +362,16 @@ public class GraphData {
 
         DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
         treatmentsArray = filteredTreatments.toArray(treatmentsArray);
-        addSeries(new PointsWithLabelGraphSeries<>(treatmentsArray));
+
+        PointsWithLabelGraphSeries series = new PointsWithLabelGraphSeries<>(treatmentsArray);
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                DataPointWithLabelInterface label = (DataPointWithLabelInterface) dataPoint;
+                ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), label.getLabel());
+            }
+        });
+        addSeries(series);
     }
 
     private double getNearestBg(long date) {

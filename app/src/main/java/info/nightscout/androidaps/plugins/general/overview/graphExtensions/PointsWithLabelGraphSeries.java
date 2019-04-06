@@ -41,8 +41,8 @@ import com.jjoe64.graphview.series.BaseSeries;
 import java.util.Iterator;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 // Added by Rumen for scalable text
 

@@ -16,6 +16,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -188,7 +189,7 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        return isSMB ? OverviewPlugin.getPlugin().determineLowLine() : yValue;
+        return yValue;
     }
 
     @Override
@@ -215,17 +216,46 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public float getSize() {
+        if (insulin > 0 || carbs > 0)
+            return Math.max(getCarbSize(), getInsulinSize());
+
         return 2;
     }
 
     @Override
     public int getColor() {
-        if (isSMB)
-            return MainApp.gc(R.color.tempbasal);
-        else if (isValid)
-            return Color.CYAN;
+        if (isValid)
+            return Color.WHITE;
         else
             return MainApp.instance().getResources().getColor(android.R.color.holo_red_light);
+    }
+
+    public float getCarbSize() {
+        if (carbs == 0)
+            return 0;
+
+        Profile profile = info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions.getInstance().getProfile();
+        float carbSize = (float) (carbs * 5 / profile.getIc(date) / profile.baseBasalSum());
+        return Math.max(0.5f, carbSize);
+    }
+
+    public int getCarbColor() {
+        return Color.WHITE;
+    }
+
+    public float getInsulinSize() {
+        if (insulin == 0)
+            return 0;
+
+        Profile profile = info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions.getInstance().getProfile();
+        float insulinSize = (float) (insulin * 5 / profile.baseBasalSum());
+        return Math.max(0.5f, insulinSize);
+    }
+
+    public int getInsulinColor() {
+        int val = MainApp.gc(R.color.tempbasal);
+        val |= 255 << 24;
+        return val;
     }
 
     @Override
