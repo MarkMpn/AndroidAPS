@@ -32,6 +32,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -178,7 +179,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
 
             List<String> confirmMessage = new LinkedList<>();
 
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin), BolusReason.Fill).value();
             if (insulinAfterConstraints > 0) {
                 confirmMessage.add(MainApp.gs(R.string.fillwarning));
                 confirmMessage.add("");

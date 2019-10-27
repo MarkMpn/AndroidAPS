@@ -35,6 +35,7 @@ import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -1566,7 +1567,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin, BolusReason reason) {
         if (!limitsFetched) return insulin;
         insulin.setIfSmaller(maximumBolusAmount, String.format(MainApp.gs(R.string.limitingbolus), maximumBolusAmount, MainApp.gs(R.string.pumplimit)), this);
         if (insulin.value() < minimumBolusAmount) {
@@ -1582,7 +1583,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
-        return applyBolusConstraints(insulin);
+        return applyBolusConstraints(insulin, BolusReason.Extended);
     }
 
     @Override

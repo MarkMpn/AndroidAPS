@@ -25,6 +25,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -680,7 +681,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processBOLUS(String[] splitted, Sms receivedSms) {
         Double bolus = SafeParse.stringToDouble(splitted[1]);
-        bolus = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolus)).value();
+        bolus = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolus), BolusReason.Total).value();
         if (bolus > 0d) {
             String passCode = generatePasscode();
             String reply = String.format(MainApp.gs(R.string.smscommunicator_bolusreplywithcode), bolus, passCode);

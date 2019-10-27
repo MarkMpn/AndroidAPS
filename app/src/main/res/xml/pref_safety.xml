@@ -16,5 +16,27 @@
             android:defaultValue="48"
             android:inputType="numberDecimal">
         </EditTextPreference>
+        <EditTextPreference
+            android:title="@string/treatmentssafety_maxcarbsbolus_title"
+            android:key="@string/key_treatmentssafety_maxcarbsbolus"
+            android:defaultValue="0"
+            android:inputType="numberDecimal">
+        </EditTextPreference>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_treatmentssafety_limitcobtoiob"
+            android:title="@string/treatmentssafety_limitcobtoiob_title" />
+        <EditTextPreference
+            android:title="@string/treatmentssafety_maxiob_title"
+            android:key="@string/key_treatmentssafety_maxiob"
+            android:defaultValue="0"
+            android:inputType="numberDecimal">
+        </EditTextPreference>
+        <EditTextPreference
+            android:title="@string/treatmentssafety_minbg_title"
+            android:key="@string/key_treatmentssafety_minbg"
+            android:defaultValue="0"
+            android:inputType="numberDecimal">
+        </EditTextPreference>
     </PreferenceCategory>
 </PreferenceScreen>

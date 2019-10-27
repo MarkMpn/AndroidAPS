@@ -19,6 +19,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
@@ -236,7 +237,7 @@ public class CommandQueue {
         }
 
         // apply constraints
-        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin), detailedBolusInfo.isSMB ? BolusReason.SMB : BolusReason.Total).value();
         detailedBolusInfo.carbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>((int) detailedBolusInfo.carbs)).value();
 
         // add new command to queue

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
 
@@ -28,7 +29,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
         this();
 
         // HARDCODED LIMIT - if there is one that could be created
-        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
+        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount), BolusReason.Pump).value();
 
         this.amount = amount;
         this.speed = speed;

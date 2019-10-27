@@ -19,6 +19,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
@@ -426,14 +427,14 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
-    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin, BolusReason reason) {
         insulin.setIfSmaller(DanaRPump.getInstance().maxBolus, String.format(MainApp.gs(R.string.limitingbolus), DanaRPump.getInstance().maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
     }
 
     @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
-        return applyBolusConstraints(insulin);
+        return applyBolusConstraints(insulin, BolusReason.Extended);
     }
 
     @Nullable

@@ -35,6 +35,7 @@ import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -326,7 +327,7 @@ public class LoopPlugin extends PluginBase {
             resultAfterConstraints.percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(resultAfterConstraints.percentConstraint, profile).value();
 
             resultAfterConstraints.smbConstraint = new Constraint<>(resultAfterConstraints.smb);
-            resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smbConstraint).value();
+            resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smbConstraint, BolusReason.SMB).value();
 
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();

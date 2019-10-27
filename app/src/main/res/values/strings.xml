@@ -28,6 +28,10 @@
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
+    <string name="treatmentssafety_maxcarbsbolus_title">Max bolus for carbs</string>
+    <string name="treatmentssafety_limitcobtoiob_title">Limit COB to IOB</string>
+    <string name="treatmentssafety_maxiob_title">Max IOB</string>
+    <string name="treatmentssafety_minbg_title">Min BG required for bolus</string>
 
     <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
@@ -1001,6 +1005,10 @@
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
     <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
+    <string name="key_treatmentssafety_maxcarbsbolus" translatable="false">treatmentssafety_maxcarbsbolus</string>
+    <string name="key_treatmentssafety_limitcobtoiob" translatable="false">treatmentssafety_limitcobtoiob</string>
+    <string name="key_treatmentssafety_maxiob" translatable="false">treatmentssafety_maxiob</string>
+    <string name="key_treatmentssafety_minbg" translatable="false">treatmentssafety_minbg</string>
     <string name="unsafeusage">unsafe usage</string>
     <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
     <string name="readstatusfailed">Read status failed</string>

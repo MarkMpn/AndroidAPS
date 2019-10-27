@@ -47,11 +47,11 @@ public interface ConstraintsInterface {
         return percentRate;
     }
 
-    default Constraint<Double>  applyBolusConstraints(Constraint<Double>  insulin) {
+    default Constraint<Double>  applyBolusConstraints(Constraint<Double> insulin, BolusReason reason) {
         return insulin;
     }
 
-    default Constraint<Double>  applyExtendedBolusConstraints(Constraint<Double>  insulin) {
+    default Constraint<Double>  applyExtendedBolusConstraints(Constraint<Double> insulin) {
         return insulin;
     }
 

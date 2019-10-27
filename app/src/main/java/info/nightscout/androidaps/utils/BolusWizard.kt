@@ -11,10 +11,7 @@ import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -146,7 +143,9 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
         // Insulin from carbs
         ic = profile.ic
         insulinFromCarbs = carbs / ic
+        insulinFromCarbs = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(insulinFromCarbs), BolusReason.Carbs).value()
         insulinFromCOB = if (useCob) (cob / ic) else 0.0
+        insulinFromCOB = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(insulinFromCOB), BolusReason.COB).value()
 
         // Insulin from IOB
         // IOB calculation
@@ -188,7 +187,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
                 ?: 0.1
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
-        insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(calculatedTotalInsulin)).value()
+        insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(calculatedTotalInsulin), BolusReason.Total).value()
 
         log.debug(this.toString())
     }

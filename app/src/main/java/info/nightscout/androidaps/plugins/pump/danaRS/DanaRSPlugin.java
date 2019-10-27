@@ -26,6 +26,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
@@ -255,14 +256,14 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
 
 
     @Override
-    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin, BolusReason reason) {
         insulin.setIfSmaller(DanaRPump.getInstance().maxBolus, String.format(MainApp.gs(R.string.limitingbolus), DanaRPump.getInstance().maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
     }
 
     @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
-        return applyBolusConstraints(insulin);
+        return applyBolusConstraints(insulin, BolusReason.Extended);
     }
 
     // Profile interface
@@ -382,7 +383,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
 
     @Override
     public synchronized PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin), BolusReason.Pump).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
             int speed = 12;

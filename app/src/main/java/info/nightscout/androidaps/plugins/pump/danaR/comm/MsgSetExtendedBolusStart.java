@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
 
@@ -22,7 +23,7 @@ public class MsgSetExtendedBolusStart extends MessageBase {
         // HARDCODED LIMITS
         if (halfhours < 1) halfhours = 1;
         if (halfhours > 16) halfhours = 16;
-        Constraint<Double> constrainedAmount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount));
+        Constraint<Double> constrainedAmount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount), BolusReason.Pump);
         if (constrainedAmount != null) {
             AddParamInt((int) (constrainedAmount.value() * 100));
         } else {

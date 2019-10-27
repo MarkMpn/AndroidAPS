@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -58,7 +59,7 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     public Constraint<Double> getMaxBolusAllowed() {
-        return applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS));
+        return applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS), BolusReason.Total);
     }
 
     public Constraint<Double> getMaxExtendedBolusAllowed() {
@@ -190,12 +191,12 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public Constraint<Double> applyBolusConstraints(@NonNull Constraint<Double> insulin) {
+    public Constraint<Double> applyBolusConstraints(@NonNull Constraint<Double> insulin, BolusReason reason) {
         ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
-            constrain.applyBolusConstraints(insulin);
+            constrain.applyBolusConstraints(insulin, reason);
         }
         return insulin;
     }

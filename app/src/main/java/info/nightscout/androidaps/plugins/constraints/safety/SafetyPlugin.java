@@ -4,8 +4,12 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -20,7 +24,9 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Round;
@@ -191,19 +197,60 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     }
 
     @Override
-    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbolus), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin, BolusReason reason) {
+        TreatmentsPlugin treatments = TreatmentsPlugin.getPlugin();
+        treatments.updateTotalIOBTreatments();
+        IobTotal bolusIob = treatments.getLastCalculationTreatments().round();
+        treatments.updateTotalIOBTempBasals();
+        IobTotal basalIob = treatments.getLastCalculationTempBasals().round();
+        Double iob = bolusIob.iob + basalIob.basaliob;
 
-        Double maxBolus = SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
-        insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
+        if (reason == BolusReason.Carbs) {
+            // Apply max bolus for carbs
+            Double maxBolusForCarbs = SP.getDouble(R.string.key_treatmentssafety_maxcarbsbolus, 0d);
 
-        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
-
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        if (pump != null) {
-            double rounded = pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value());
-            insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
+            if (maxBolusForCarbs > 0)
+                insulin.setIfSmaller(maxBolusForCarbs, "Limiting bolus for carbs", this);
         }
+
+        if (reason == BolusReason.COB) {
+            // Conditionally limit bolus for COB to IOB to avoid over-bolusing for previous hypo treatments
+            Boolean applyCobIobLimit = SP.getBoolean(R.string.key_treatmentssafety_limitcobtoiob, false);
+
+            if (applyCobIobLimit) {
+                insulin.setIfSmaller(iob, "Limiting COB bolus to IOB", this);
+            }
+        }
+
+        if (reason == BolusReason.Total) {
+            insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbolus), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
+
+            Double maxBolus = SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
+            insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
+
+            insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
+
+            Double maxIob = SP.getDouble(R.string.key_treatmentssafety_maxiob, 0d);
+            if (maxIob > 0) {
+                insulin.setIfGreater(maxIob - iob, "Limiting bolus to max IOB", this);
+            }
+
+            BgReading actualBg = DatabaseHelper.actualBg();
+            Double minBg = SP.getDouble(R.string.key_treatmentssafety_minbg, 0d);
+            if (minBg < actualBg.valueToUnits(ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getUnits())) {
+                insulin.set(0d, "Limiting bolus to 0 because BG below minimum", this);
+            }
+        }
+
+        if (reason != BolusReason.Carbs && reason != BolusReason.COB) {
+            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+
+            if (pump != null) {
+                double rounded = pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value());
+                insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
+            }
+        }
+
         return insulin;
     }
 

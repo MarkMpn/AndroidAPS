@@ -37,6 +37,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.BolusReason;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -213,7 +214,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                 return;
 
             Double insulin = SafeParse.stringToDouble(editInsulin.getText());
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin), BolusReason.Total).value();
 
             List<String> actions = new LinkedList<>();
             if (insulin > 0) {
